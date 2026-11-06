@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "301877142789",
+    "project_id": "bherunath-drilling",
+    "storage_bucket": "bherunath-drilling.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:301877142789:android:0191d2b6c6fab0bea4036c",
+        "android_client_info": {
+          "package_name": "Com.bherunath.company"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyYiojLn08RnlyPit2ydcnUD_l3i7gGYE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
