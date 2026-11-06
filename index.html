@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bherunath Drilling</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#e9f5e9;color:#173b20}
+header{background:#08752c;color:white;text-align:center;padding:22px}
+header h2{margin:0}
+.container{padding:15px;max-width:600px;margin:auto}
+.card{background:white;padding:16px;margin:14px 0;border-radius:12px;box-shadow:0 2px 8px #0002}
+h3{color:#08752c;margin-top:0}
+input,select,button{width:100%;padding:12px;margin:7px 0;border-radius:7px;border:1px solid #bbb;font-size:16px}
+button{background:#08752c;color:white;border:0;font-weight:bold}
+button:active{background:#04501d}
+.result{font-size:20px;font-weight:bold;color:#08752c}
+.item{border-bottom:1px solid #ddd;padding:10px 0}
+.small{font-size:13px;color:#666}
+</style>
+</head>
+<body>
+<header>
+<h2>🚜 BHERUNATH DRILLING</h2>
+<p>आपका अपना ड्रिलिंग हिसाब ऐप</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h3>नया ग्राहक / काम जोड़ें</h3>
+<input id="name" placeholder="ग्राहक का नाम">
+<input id="mobile" placeholder="मोबाइल नंबर" type="tel">
+<input id="place" placeholder="काम की जगह">
+
+<select id="type" onchange="changeType()">
+<option value="feet">फीट के हिसाब से काम</option>
+<option value="hour">घंटे के हिसाब से काम</option>
+</select>
+
+<div id="feetBox">
+<input id="feet" type="number" placeholder="कुल फीट">
+<input id="rate" type="number" placeholder="प्रति फीट रेट (₹)">
+</div>
+
+<div id="hourBox" style="display:none">
+<input id="hours" type="number" placeholder="कुल घंटे">
+</div>
+
+<button onclick="saveJob()">काम सेव करें</button>
+</div>
+
+<div class="card">
+<h3>💰 कुल हिसाब</h3>
+<div class="result" id="total">₹ 0</div>
+<p class="small">घंटे का निर्धारित रेट ₹3000 प्रति घंटा है।</p>
+</div>
+
+<div class="card">
+<h3>📋 पुराने काम</h3>
+<div id="records">अभी कोई काम सेव नहीं है।</div>
+</div>
+
+</div>
+
+<script>
+let jobs=JSON.parse(localStorage.getItem("drillingJobs")||"[]");
+
+function changeType(){
+let t=document.getElementById("type").value;
+document.getElementById("feetBox").style.display=t==="feet"?"block":"none";
+document.getElementById("hourBox").style.display=t==="hour"?"block":"none";
+}
+
+function saveJob(){
+let name=document.getElementById("name").value.trim();
+let place=document.getElementById("place").value.trim();
+let type=document.getElementById("type").value;
+let amount=0,detail="";
+
+if(!name){alert("ग्राहक का नाम लिखें");return;}
+
+if(type==="feet"){
+let feet=Number(document.getElementById("feet").value);
+let rate=Number(document.getElementById("rate").value);
+if(feet<=0||rate<=0){alert("फीट और रेट सही भरें");return;}
+amount=feet*rate;
+detail=feet+" फीट × ₹"+rate;
+}else{
+let hours=Number(document.getElementById("hours").value);
+if(hours<=0){alert("घंटे भरें");return;}
+amount=hours*3000;
+detail=hours+" घंटे × ₹3000";
+}
+
+let job={
+name,
+mobile:document.getElementById("mobile").value,
+place,type,detail,amount,
+date:new Date().toLocaleDateString("hi-IN")
+};
+
+jobs.unshift(job);
+localStorage.setItem("drillingJobs",JSON.stringify(jobs));
+document.getElementById("total").innerText="₹ "+amount;
+render();
+alert("काम सेव हो गया!");
+}
+
+function render(){
+let box=document.getElementById("records");
+if(!jobs.length){box.innerHTML="अभी कोई काम सेव नहीं है।";return;}
+box.innerHTML=jobs.map(j=>`
+<div class="item">
+<b>${escapeHTML(j.name)}</b><br>
+${escapeHTML(j.place)}<br>
+${escapeHTML(j.detail)}<br>
+<b>₹ ${j.amount}</b><br>
+<span class="small">${escapeHTML(j.date)}</span>
+</div>`).join("");
+}
+
+function escapeHTML(s){
+return String(s||"").replace(/[&<>"']/g,c=>({
+"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+}
+render();
+</script>
+</body>
+</html>
